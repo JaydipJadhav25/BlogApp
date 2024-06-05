@@ -13,6 +13,14 @@ router.get("/signin", (req, res) => {
     return res.render("signup");
   });
 
+router.get("/logout" , (req , res) =>{
+
+  // const currentuser = req.user;
+  // if(!currentuser) throw new Error("something went wrong.")
+
+  return res.clearCookie("token").redirect("/")
+})
+
   router.post("/signup",async(req, res) => {
    const { fullname , email , password } = req.body
 console.log(fullname , email,  password)

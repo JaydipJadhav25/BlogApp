@@ -8,6 +8,9 @@
 <body>
     <%- include('./partials/nav.ejs') %>
    
+    <% if (locals.user) { %>
+        <%= JSON.stringify(locals.user) %>
+    <% } %>
 
 
     <%- include('./partials/script.ejs') %>

@@ -4,7 +4,7 @@ import { validatetoken } from "../services/token.services.js";
 
 const verifyjwt =  (req, res, next) => {
     const usertoken = req.cookies.token;
-    console.log("usertoken : " , usertoken)
+    // console.log("usertoken : " , usertoken)
 
     if(!usertoken) return res.render("signin")
 

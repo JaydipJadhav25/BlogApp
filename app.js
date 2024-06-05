@@ -21,7 +21,10 @@ app.use(cookieParser())
 app.use("/user" , userroutes)
 
 app.get('/', verifyjwt , function (req, res) {
-  res.render("home")
+
+  res.render("home" ,{
+    user : req.user
+  })
 })
 
 
