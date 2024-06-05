@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+   <%- include('./partials/head.ejs') %>
+    <title>addBLog</title>
+</head>
+<body>
+    <%- include('./partials/nav.ejs') %>
+    <h1 class="text-primary"> Add New Blog</h1>
+  
+ 
+    <!-- <form action="/blog/addnewblog" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Title</label>
+            <input type="text" 
+            class="form-control"
+             id="exampleFormControlInput1"
+              placeholder="title of Blog" name="title">
+          </div>
+    
+          <div class="mb-3">
+            <label for="Coverimage" class="form-label">CoverImage</label>
+            <input type="file" 
+            class="form-control"
+             id="Coverimage"
+              placeholder="CoverImage  Blog" name="Coverimage">
+          </div>
+    
+          <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Body</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="body"></textarea>
+          </div>
+    
+          <button type="button" class="btn btn-primary">Submit</button>
+    
+       </form> -->
+  
+   
+
+
+
+    <form  action="/blog/addnewblog" method="post" enctype="multipart/form-data">
+
+        <div class="container mb-3">
+            <label for="title"> Title:</label>
+           
+            <input type="text" name="title"   placeholder="title of Blog" class="form-control">
+            <br>
+        
+   
+            <label for="avatar">CoverImage:</label>
+     
+            <input type="file" name="coverimage">
+            <br>  <br>
+                
+            <label for="body" class="form-label">Body</label>
+            <textarea name="body" id="body" class="form-control"></textarea>
+   
+            <br>
+      
+   
+            <input type="submit" class="btn btn-primary">
+        </div>
+
+    </form>
+
+
+    <%- include('./partials/script.ejs') %>
+</body>
+</html>

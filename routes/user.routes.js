@@ -21,7 +21,8 @@ router.get("/logout" , (req , res) =>{
   return res.clearCookie("token").redirect("/")
 })
 
-  router.post("/signup",async(req, res) => {
+
+ router.post("/signup",async(req, res) => {
    const { fullname , email , password } = req.body
 console.log(fullname , email,  password)
   await User.create({
