@@ -16,6 +16,75 @@ router.get("/add-new", (req, res) => {
     });
   });
 
+  //delete blog 
+
+
+router.get("/delete/:id" , async(req, res) =>{
+  try {
+    
+    console.log("id : " , req.params.id);
+
+    //steps : 
+    //1.this is allready logned user blog
+    //2.delete blog 
+    //3.delete comments of this blogs
+    //4.returen remaning blogs
+    const delectblog = await Blog.findByIdAndDelete({
+      _id : req.params.id
+
+    },{
+      new : true
+    });
+    console.log("deleted blog: " , delectblog);
+
+    await comment.deleteMany({
+      blogid : req.params.id,
+    })
+
+    //feach reaming blogs
+
+    const userallblogs = await Blog.find({
+      _id : req.params.id
+    }).populate("owner");
+
+
+    return res.render("myblogs",{
+      user : req.user,
+      blogs : userallblogs,
+      success : "Blog deleted successfully..."
+
+    })
+
+  } catch (error) {
+       
+    return res.render("myblogs",{
+      user : req.user,
+      blogs : userallblogs,
+      error : "Blog Deleting Error"
+
+    }) 
+    
+  }
+
+})
+
+
+//get all blogs of user
+ router.get("/myblog/:userId" , async (req ,res) =>{
+  //  console.log("current user : " , req.params.userId);
+
+  const userallblogs = await Blog.find({
+    owner : req.params.userId
+  }).populate("owner");
+  //  console.log("current user all blogs: " ,userallblogs);
+  
+  return res.render("myblogs" ,{
+    user : req.user,
+    blogs : userallblogs
+  })
+ }) 
+
+
   // feaching all blogs and comments
   router.get("/:id" , async (req , res) => {
     const currentblog = await Blog.findById(req.params.id).populate("owner")
@@ -34,14 +103,20 @@ router.get("/add-new", (req, res) => {
  //..../blog/comment/...........
  router.post("/comment/:blogId" , async(req, res) =>{
 // console.log("data",req.body.content,req.params.blogId )
-const currentusercomment = await comment.create({
-  content : req.body.content,
-  blogid : req.params.blogId,
-  createdby : req.user._id
-})
+try {
+  const currentusercomment = await comment.create({
+    content : req.body.content,
+    blogid : req.params.blogId,
+    createdby : req.user._id
+  })
+  
+  console.log("currentusercomments: " , currentusercomment)
+  return res.redirect(`/blog/${req.params.blogId}`);
+} catch (error) {
 
-console.log("currentusercomments: " , currentusercomment)
-return res.redirect(`/blog/${req.params.blogId}`);
+  return res.redirect(`/blog/${req.params.blogId}`)
+  
+}
 
  }) 
 

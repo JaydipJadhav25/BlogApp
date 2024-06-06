@@ -18,10 +18,14 @@
             <img src="<%= locals.user.avatar %>" alt="" width="20px">
               <b><%= locals.user.fullname %></b>
               </a>
+
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="/user/logout">log out</a></li>
                 
               </ul>
+              <li class="nav-item">
+                <a class="nav-link" href="/blog/myblog/<%= locals.user._id %>">My Blogs</a>
+              </li>
           <% } else { %>
             
             <li class="nav-item">
@@ -43,4 +47,12 @@
     <div class="container mt-4">
       <div class="alert alert-danger" role="alert"><%= locals.error %></div>
     </div>
+  <% } %>
+
+  <% if (locals.success) { %>
+
+    <div class="alert alert-success" role="alert">
+      <%= locals.success %>
+    </div>
+   
   <% } %>
