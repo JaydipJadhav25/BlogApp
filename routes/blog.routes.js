@@ -16,9 +16,68 @@ router.get("/add-new", (req, res) => {
     });
   });
 
+  //update blogs ...........
+
+  router.get("/update/:blogId", async (req, res) => {
+    console.log(req.params.blogId)
+    
+    const currentblog = await Blog.findById({_id :req.params.blogId});
+
+    return res.render("updateblog" ,{
+     user : req.user,
+     blogs : currentblog
+
+    });
+
+  });
+
+
+ router.post("/update/:blogId" , async(req , res) =>{
+   try {
+     const { title , body }  =req.body;
+     // console.log(" data : " , title , body)
+      
+         const updateblog = await Blog.findByIdAndUpdate(
+           req.params.blogId,
+          {
+            $set: {
+              title,
+              body
+            }
+          },{
+            new : true
+          }
+         )
+  console.log(" updated blog : " , updateblog)
+
+         const userallblogs = await Blog.find({
+          _id : req.params.blogId
+        }).populate("owner");
+    
+    console.log(" all blogs  : " , userallblogs)
+        return res.render("myblogs",{
+          user : req.user,
+          blogs : userallblogs,
+          success : "Blog update successfully..."
+    
+        })
+  
+    } catch (error) {
+
+        return res.render("myblogs",{
+          user : req.user,
+          blogs : userallblogs,
+          error : "Blog update failed...."
+    
+        })
+
+    }
+ }) 
+
+
+
+
   //delete blog 
-
-
 router.get("/delete/:id" , async(req, res) =>{
   try {
     
@@ -141,7 +200,7 @@ try {
         })
         if(!userblog) throw new Error("something went wrong ")
 
-        return res.redirect("/");
+        return res.redirect("/",);
 
     } catch (error) {
       console.log("error" , error)

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+   <%- include('./partials/head.ejs') %>
+    <title>updateblog</title>
+</head>
+<body>
+    <%- include('./partials/nav.ejs') %>
+
+   <% if (locals.blogs) { %>
+         <div class="container">
+            <form  action="/blog/update/<%= locals.blogs._id %>" method="post" >
+
+                <div class="container mb-3 ms-4">
+                    <label for="title" class="me-4 mt-3"> Title:</label>
+                   
+                    <input type="text" name="title"   placeholder=" new title of Blog" class="form-control">
+                    <br>
+                        
+                    <label for="body" class="form-label">Body</label>
+                    <textarea name="body" id="body" class="form-control"></textarea>
+           
+                    <br>
+              
+           
+                    <input type="submit" class="btn btn-primary">
+                </div>
+        
+            </form>
+        
+         </div>
+   <% } %>
+
+
+
+    <%- include('./partials/script.ejs') %>
+</body>
+</html>
