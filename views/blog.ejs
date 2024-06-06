@@ -16,13 +16,47 @@
         <img src="<%= blog.coverimage %>" alt="blog" width="600px" height="500px">
 
          <pre><%= blog.body %></pre>
-     </div>
 
-     <div class="containerowner mt-4 ">
-        <img src="<%= blog.coverimage %>" alt="" width="80px"> 
-        <%= blog.owner.fullname%>
 
      </div>
+ 
+ <!-- blog owner infomation show -->
+     <div class="containerowner mt-4 ms-4">
+        <img src="<%= blog.owner.avatar %>" alt="" width="50px"> 
+        <b><%= blog.owner.fullname%></b>
+
+        
+     </div>
+
+     <h2 class="ms-4 mt-3">comment (<%= comments.length %>)</h2>
+
+      
+
+     <!-- //user signined asel trch comment kru shakto -->
+    <% if (locals.user) { %>
+     
+        <div class="containercomment mt-4 me-4 ms-4">
+           <form action="/blog/comment/<%= blog._id %>" method="post">
+               <input type="text" name="content" class="form-control" placeholder="add comment for <%= user.fullname %>">
+               <button class="btn btn-primary mt-3">send</button>
+   
+           </form>
+   
+        </div>
+       
+    <% } %>
+   <!-- show users comments on that blog -->
+   <div class="usersendcomments mt-3 me-4 ms-4">
+    <!-- single comment nhi multip user chya comments asnare so 
+    use loop -->
+    <% comments.forEach(comment => { %>
+        <img src="<%= comment.createdby.avatar %>" alt="" width="20px"> 
+    <%= comment.createdby.fullname%> 
+     <p><%= comment.content %></p>  
+     
+    <% }) %>
+
+ </div>
 
     <%- include('./partials/script.ejs') %>
 
