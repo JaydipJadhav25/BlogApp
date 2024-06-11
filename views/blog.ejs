@@ -39,6 +39,8 @@
            <form action="/blog/comment/<%= blog._id %>" method="post">
                <input type="text" name="content" class="form-control" placeholder="add comment for <%= user.fullname %>">
                <button class="btn btn-primary mt-3">send</button>
+
+               
    
            </form>
    
@@ -52,7 +54,20 @@
     <% comments.forEach(comment => { %>
         <img src="<%= comment.createdby.avatar %>" alt="" width="20px"> 
     <%= comment.createdby.fullname%> 
-     <p><%= comment.content %></p>  
+     <p><%= comment.content %></p> 
+     
+     <!-- delete comments of  user blogs -->
+     <% if (locals.currentblogowner) { %>
+        <a href="/blog/delete/comment/<%= comment._id %>"class="btn btn-danger">Delete</a>
+     
+        <% } else if (comment.createdby.fullname === user.fullname) { %>
+        <a href="/blog/delete/comment/<%= comment._id %>"class="btn btn-danger">Delete</a>
+        <% } %>
+
+
+ 
+    </br>
+</br>
      
     <% }) %>
 

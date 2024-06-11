@@ -3,6 +3,8 @@ import { upload } from "../middlewares/multer.midd.js";
 import { Blog } from "../models/blog.model.js"
 import { uploadOnCloudinary } from "../services/cloudinary.js";
 import { comment } from "../models/comment.models.js";
+import mongoose from "mongoose";
+import { User } from "../models/user.model.js";
 
 
 
@@ -15,6 +17,11 @@ router.get("/add-new", (req, res) => {
      user : req.user
     });
   });
+
+
+
+
+
 
   //update blogs ...........
 
@@ -144,21 +151,167 @@ router.get("/delete/:id" , async(req, res) =>{
  }) 
 
 
-  // feaching all blogs and comments
-  router.get("/:id" , async (req , res) => {
-    const currentblog = await Blog.findById(req.params.id).populate("owner")
-      // console.log("blog" , currentblog)
-      const comments = await comment.find({blogid :req.params.id }).populate("createdby")
-      // console.log("comments: " , comments)
-      // console.log(req.user)
-    return res.render("blog" ,{
-      user : req.user,
-      blog : currentblog,
-      comments : comments
-    })
-  })
+  
+    // feaching all blogs and comments
+router.get("/:id" , async (req , res) => {
 
+    
+      //  console.log(" id : " , req.params.id)
+ 
+       const currentblog = await Blog.findById(req.params.id).populate("owner")
+ 
+ 
+        //  console.log("currentblog owner : " , currentblog.owner.fullname)
+        //  console.log("currentblog  : " , currentblog.owner._id )
+ 
+ 
+         const comments = await comment.find({blogid :req.params.id }).populate("createdby")
+         console.log("comments: " , comments)
+         
+         
+      
+   
+         // find crrent user is that of blog owner
+         // const currentblogowner = undefined ;
+         
+         //only find current lognrd user blogs : 
+        //  console.log("current user : " , req.user._id)
+        //  console.log(req.user.fullname)
+   
+         // const blogowner = await Blog.find({
+         //   owner : req.user._id
+   
+         // }).populate("owner");
+   
+         
+         const currentblogownerid = currentblog.owner._id.toString()  ;
+         const currentlogneduserid = new mongoose.Types.ObjectId(req.user._id).toString();
+         // console.log( currentblogownerid , currentlogneduserid );
+         // doneuserblog =  currentblogownerid;
+         // console.log("done userblog outside: " , doneuserblog)
+   
+         // if(currentblogownerid === currentlogneduserid) return doneuserblog =  currentblogownerid;
+         // console.log("done userblog : " , doneuserblog)
+             
+       
+   
+         // const currentuserblogs = await Blog.aggregate([{
+         //   $match :{
+         //       _id : new mongoose.Types.ObjectId(req.)
+         //   }
+         // }])
+   
+         // console.log("blogowner : " , blogowner)
+   // console.log("blogonwer : " , blogowner )
+   
+   
+   //and find user comments in other blogs :
+   //feaching all comments of current blog
+   const currentusercomments = await comment.find({
+     blogid : req.params.id
+   }) 
+   
+ 
+   console.log("current blog comments : " ,currentusercomments)
+    //using find function............
+  //  const result = currentusercomments.find(cheker || {});
+
+  //  function cheker(data) {
+  //   return data.createdby.toString() === req.user._id
+
+  //  }
+  // console.log(" result :  ", result);
+  //  console.log("current blog comments of current user cretedby :   " ,currentusercomments[0].createdby)//single user chi id yeil na ft
+   
+   
+   //then find only those comments of current user :  
+            
+   let currentblogcommentowner = undefined;
+ 
+  //  const currentusercommentonblogid = comments.createdby._id
+  //  console.log(currentusercommentonblogid)
+    // if( currentusercommentonblogid === currentlogneduserid){
+    //  console.log("ahe na apli comment ya blog la")
+    //  currentblogcommentowner = currentusercommentonblogid;
+    // }
+    // else{
+    //  console.log(" nhi apli comment ya blog la  ")
+    // }
+
+
+     
+         let  currentblogowner = undefined;
+         //  console.log(new mongoose.Types.ObjectId(req.user._id),  blogowner[0].fullname)
+         // jr current blog ahe ani tyacha owner ha login 
+         // user ahe tr tyala access ahe ki to all deletes delete kru shakto
+         //ani ajun je other blogcomment asetil v ti current user 
+         // ne kelia asel tr to ti pn delete kru shakto
+   
+        if( currentblogownerid  === currentlogneduserid ){
+   
+   
+           // console.log("done,  current blog is user blog")
+          currentblogowner = currentblogownerid;
+        }
+       else{
+         console.log("exits not user blog")
+
+       }
+       
+   
+     
+       //  console.log( "result : " ,  currentblogowner)
+   
+   
+      
+       return res.render("blog" ,{
+         user : req.user,
+         blog : currentblog,
+         comments : comments,
+         currentblogowner,
+        //  currentblogcommentowner
+        // currentusercomments
+        // result
+        currentusercomments
+
+       })
+ 
+    
+    
+     
+    })
+  
+ 
  //handle comment routes
+  //////////////////all about of comment opretion.//////////
+
+  //deleted user blogs comment only owner of blog///
+// find user and owener of blog 
+
+router.get("/delete/comment/:Id" , async(req , res) =>{
+  try {
+    console.log(" current comment id: " , req.params.Id);
+    const currentblog = await comment.findById(req.params.Id);
+    // console.log("current blog : " ,currentblog.blogid)
+    const currentblogid = currentblog.blogid;
+    await comment.deleteOne({
+      _id :  req.params.Id
+    })
+  
+  
+    console.log("deleting successfully......")
+    // render same page on BlogId requied..
+  
+     return res.redirect(`/blog/${currentblogid}`)
+  } catch (error) {
+
+    return res.redirect(`/blog/${currentblogid}`)
+    
+  }
+
+} )
+
+
  //..../blog/comment/...........
  router.post("/comment/:blogId" , async(req, res) =>{
 // console.log("data",req.body.content,req.params.blogId )
