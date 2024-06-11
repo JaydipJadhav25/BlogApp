@@ -19,6 +19,59 @@ router.get("/add-new", (req, res) => {
   });
 
 
+  //update comment..................
+  router.get("/comment/update/:Id" ,async(req , res) =>{
+    // console.log(" current comment id: " , req.params.Id);
+
+    const currentcomment = await comment.find({
+      _id : req.params.Id
+    }).populate("createdby")
+
+
+    // console.log(currentcomment);
+
+
+
+    return res.render("updatecomment" ,{
+      currentcomment,
+      user : req.user
+    });
+
+  })
+
+
+  router.post("/commentdelete/:id" , async(req , res ) =>{
+   try {
+     // console.log(" id : " , req.params.id);
+     const { content } = req.body;
+ 
+     // console.log("new comment :  ",  content);
+     
+ 
+   const newcomment = await comment.findByIdAndUpdate({
+       _id :  req.params.id
+     },{
+       $set :{ 
+            content
+       }
+     },{
+       new : true
+     })
+     console.log(newcomment);
+ 
+     
+ 
+ 
+     return res.redirect(`/blog/${newcomment.blogid}`)
+   } catch (error) {
+
+    return res.redirect(`/blog/${newcomment.blogid}`)
+    
+
+   }
+
+  })
+
 
 
 
@@ -285,6 +338,9 @@ router.get("/:id" , async (req , res) => {
  //handle comment routes
   //////////////////all about of comment opretion.//////////
 
+  //update comment 
+
+
   //deleted user blogs comment only owner of blog///
 // find user and owener of blog 
 
@@ -293,7 +349,7 @@ router.get("/delete/comment/:Id" , async(req , res) =>{
     console.log(" current comment id: " , req.params.Id);
     const currentblog = await comment.findById(req.params.Id);
     // console.log("current blog : " ,currentblog.blogid)
-    const currentblogid = currentblog.blogid;
+    const currentblogid = currentblog.blogid;//comment vrun current blog bhrtla
     await comment.deleteOne({
       _id :  req.params.Id
     })

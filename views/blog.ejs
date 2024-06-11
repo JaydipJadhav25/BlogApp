@@ -62,6 +62,8 @@
      
         <% } else if (comment.createdby.fullname === user.fullname) { %>
         <a href="/blog/delete/comment/<%= comment._id %>"class="btn btn-danger">Delete</a>
+        <a href="/blog/comment/update/<%= comment._id %>" class="btn btn-success">Update Comment</a>
+
         <% } %>
 
 

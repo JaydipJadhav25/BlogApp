@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+   <%- include('./partials/head.ejs') %>
+    <title>update-comment</title>
+</head>
+<body >
+    
+     
+    <h1 class="ms-4 mt-3"> Update Comment </h1>
+
+
+<div class="container ms-4 mt-3 me-4">
+
+              <b>Old Comment : </b>
+              <br>
+              <br>
+
+         <% if (locals.currentcomment) { %>
+
+                <img src="<%= user.avatar %>" alt="" width="30px">
+               <b> <%= user.fullname %></b>
+                <p><%= currentcomment[0].content%>
+            </p>
+          
+         <% } %>
+ 
+     
+         <b>new Comment : </b>
+    <form action="/blog/commentdelete/<%=currentcomment[0]._id %>" method="post">
+        <input type="text" placeholder="update comment" name="content">
+        <br>
+        <button class="mt-3 btn btn-primary">send</button>
+    </form>
+
+</div>
+ 
+<%- include('./partials/script.ejs') %>
+        
+</body>
+</html>
